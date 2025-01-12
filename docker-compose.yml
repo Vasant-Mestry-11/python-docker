@@ -5,6 +5,8 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userinfo
     container_name: mysqldb
+    networks:
+      - my-network
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 20s
@@ -13,6 +15,13 @@ services:
   mypythonapp:
     build: ./
     container_name: mypyapp
+    networks:
+      - my-network
     depends_on:
       mysqldb:
         condition: service_healthy
+    stdin_open: true
+    tty: true
+
+networks:
+  my-network:
